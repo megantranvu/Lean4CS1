@@ -1,4 +1,84 @@
-# Getting Started
+# Greetingss
+
+There is good reason today to believe that every serious
+software engineer of the future will be expected to know
+how to use and produce software artifacts that, in a single
+language, intelligibly express everything from the abstract
+mathematics of the application domain, to low-level hardware
+operational dynamics, inflected with machine-verified proofs
+blended seamlessly throughout, attesting to the consistency
+of every single detail of the entire construct.
+
+The magnitude of this impending paradigm shift in programming
+is of a different nature than in the past. Binary, assembly, 
+imperative programming, functional programming, structured 
+programming, object-oriented programming, parallel programming, 
+concurrent programming, SIMD programming. The are all languages
+in which one can express only half of the world at hand in any
+serious setting. They are computation languages. What they lack
+are facilities for mathematical abtsract or deductive reasoning,
+which are basically all of it for software specification and 
+verification.  
+
+
+
+now before us is far greater
+those those 
+
+computatational software
+development  in traditional programming,  
+
+
+
+
+
+
+
+ system requirements,
+necessarily expressed in the terms of application domain;
+specifications concerning particular machinery to be built;
+and ordinary computation, with continual checking of  
+to  
+implementations in the low-level formalisms
+of, say, imperative programming, but also to express the
+abstract mathematics of the application domain itself,
+the definitions of terms for which are prerequite to the
+expression of some particular system intended to operate
+in, with, and on that domain. 
+
+with the 
+the
+domain 
+the been trained to
+handle the formal mathematics of the domain of discourse  
+
+be will be trained to deal with the abstract
+mathematics 
+
+A premise of this course is that future programmers will
+have to understand how to weave abstract mathematical
+formal specifications and
+corresponding implementations within single   
+
+
+The goal of this course on *programming* is to equip each
+student with cognitive skills and performance capabilities
+to acquire a strong cognitive grasp of the 
+affordances provided by dependent type theory and how to use
+them to compose astoundingly rich formal abstractions
+
+computation, reasoning, 
+
+
+ mental model of what that term means grounded not (only) in notions of *computation*
+
+
+an understanding of this term that encompasses not
+just types of data and operations partticular to data according
+to its type 
+
+
+
 
 This online book is generated from literate code (see Knuth) written
 in the dependently typed, mathematics-supporting programming language
