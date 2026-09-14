@@ -141,9 +141,36 @@ def id'' {a : Sort u} (n : a) : a := n -- implicit argument in curly braces, Lea
 
 
 
--- 9/10 weekend video
-theorem disj_comm : A ∨ B → B ∨ A :=
+-- 9/14 + weekend video
+
+def a : Bool := Bool.true
+def b : Bool := Bool.false
+def ab : Bool × Bool := (a, b) -- need special /x
+
+def ab_return_a : (Bool × Bool) → Bool
+:= fun ab => ab.1 -- returns first element of tuple
+
+theorem disjunction_flip : A ∨ B → B ∨ A := -- disjunction is commutative
 fun pq =>
 match pq with
 | Or.inl p => Or.inr p -- given a proof p for A, construct a disjunction with p on the right
 | Or.inr q => Or.inl q -- given a proof q for B, construct a disjunction with q on the left
+
+def swap {A B} : (A × B) → (B × A) := fun ab => (ab.2, ab.1) -- swap elements of a tuple
+-- curly braces around implicit arguments
+-- (A x B) is an explicit argument, Lean infers type of A and B
+#eval swap (7, "Hello")
+
+def swap' {a : Type u} {b : Type v} : (a × b) → (b × a) := fun ab => (ab.2, ab.1) -- swap elements of a tuple
+#eval swap' (7, "Hello")
+
+-- involutive function – applying function twice returns original input
+#check (swap (swap (7, "Hello")) = (7, "Hello"))
+
+theorem swap_comm : swap ( swap (x, y) ) = (x, y) := rfl -- rfl is same as Eq.refl, reflexivity of equality
+
+-- keyword 'inductive' - defines a type
+-- keyword 'structure' - defines a type
+-- honestly what's the diff between inductive and structure
+
+-- Prod.make = And.intro, introduction rules
