@@ -136,3 +136,14 @@ def id' (a : Sort u) : a → a := fun n => n -- takes any Type a, returns an ide
 def id'' {a : Sort u} (n : a) : a := n -- implicit argument in curly braces, Lean infers type of n is a
 #eval id'' 7 -- Lean infers type of 7 is Nat
 #eval @id'' Nat 7 -- explicitly state type with @ if you want
+
+-- parametric polymorphism vs ad-hoc polymorphism
+
+
+
+-- 9/10 weekend video
+theorem disj_comm : A ∨ B → B ∨ A :=
+fun pq =>
+match pq with
+| Or.inl p => Or.inr p -- given a proof p for A, construct a disjunction with p on the right
+| Or.inr q => Or.inl q -- given a proof q for B, construct a disjunction with q on the left
