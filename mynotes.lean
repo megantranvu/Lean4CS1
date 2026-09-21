@@ -170,7 +170,51 @@ def swap' {a : Type u} {b : Type v} : (a × b) → (b × a) := fun ab => (ab.2, 
 theorem swap_comm : swap ( swap (x, y) ) = (x, y) := rfl -- rfl is same as Eq.refl, reflexivity of equality
 
 -- keyword 'inductive' - defines a type
--- keyword 'structure' - defines a type
+-- keyword 'structure' - defines a type with one constructor, mk
 -- honestly what's the diff between inductive and structure
 
 -- Prod.make = And.intro, introduction rules
+-- funny angled brackets to make tuple of proofs /< />
+
+
+
+-- 9/16
+-- Wth are we doing? shallow embedding of predicate lang constructs as Lean types
+
+inductive Variable where
+| X : Variable
+| Y : Variable
+
+inductive PropLogic where
+| t
+| f
+| and (p q : PropLogic) : PropLogic
+| or (p q : PropLogic) : PropLogic
+| not (p : PropLogic) : PropLogic
+| variable (v : Variable) : PropLogic
+
+open PropLogic
+
+def X := PropLogic.variable Variable.X
+def Y := PropLogic.variable Variable.Y
+
+
+def eval : PropLogic → (Variable → Bool) → Bool
+| t, _ => true
+| .f, _ => false
+| .and p q, i => eval p i && eval q i
+| .or p q, i => eval p i || eval q i
+| .not p, i => !(eval p i)
+| .variable v, i => i v
+
+def i1 : Variable → Bool
+| .X => true
+| .Y => true
+
+def e1 := f
+def e2:= t
+def e3:= PropLogic.and e1 e2
+#eval eval e3 i1 -- basically ignoring i1
+
+def e4 := PropLogic.and X Y
+#eval eval e4 i1 -- using vals from i1
