@@ -1,6 +1,6 @@
 # Exercise authoring conventions
 
-*Status: draft. Reference implementation: `FPCourse/T02_InductiveTypes/Week05_Lists.lean`.*
+*Status: draft. Reference implementation: `FPCourse/T02_InductiveTypes/W05_Lists.lean`.*
 
 These conventions make every week's exercises self-checking, tagged, and auditable
 for coverage — importing Software Foundations' organizational discipline without its

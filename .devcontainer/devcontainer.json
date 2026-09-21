@@ -57,8 +57,6 @@
 				}
 			},
 			"extensions": [
-				// Dev Containers is a UI-only extension: it runs on the host, not
-				// in here. Students install it by hand (see src/setup.md, step 1).
 				"formulahendry.auto-close-tag@0.5.15",
 				"formulahendry.auto-rename-tag@0.1.10",
 				"aaron-bond.better-comments@3.0.2",
@@ -90,7 +88,8 @@
 				"denis-gorbachev.lean4-code-actions@1.1.32",
 				"Anthropic.claude-code@2.1.259",
 				"tintinweb.graphviz-interactive-preview@0.3.5",
-				"openai.chatgpt@26.825.51511"
+				"openai.chatgpt@26.825.51511",
+				"pdconsec.vscode-print"
 			]
 		}
 	}

@@ -4,85 +4,39 @@ There is good reason today to believe that every serious
 software engineer of the future will be expected to know
 how to use and produce software artifacts that, in a single
 language, intelligibly express everything from the abstract
-mathematics of the application domain, to low-level hardware
+mathematics of the application domain to low-level hardware
 operational dynamics, inflected with machine-verified proofs
 blended seamlessly throughout, attesting to the consistency
 of every single detail of the entire construct.
 
-The magnitude of this impending paradigm shift in programming
-is of a different nature than in the past. Binary, assembly, 
-imperative programming, functional programming, structured 
-programming, object-oriented programming, parallel programming, 
-concurrent programming, SIMD programming. The are all languages
-in which one can express only half of the world at hand in any
-serious setting. They are computation languages. What they lack
-are facilities for mathematical abtsract or deductive reasoning,
-which are basically all of it for software specification and 
-verification.  
+The magnitude of this impending *paradigm shift* in programming
+is going to be of a very different nature and magnitude than in
+the past. Binary, assembly, imperative programming, functional,
+structured, object-oriented, parallel, functional, concurrent
+languages are *all* languages for expressing computations. What
+the paradigm shift does is to move abstract formal languages
+into the very heart of everyday programming. This is what our
+students now need to begin to learn about from the first class
+in computer science.
 
+## The Basic Claim
 
+The main premise of this course is that future programmers
+will have to understand not only how to translate informal
+ideas but how to weave abstract mathematical specifications
+and proofs with code single theoretically clean programming
+and reasoning language.
 
-now before us is far greater
-those those 
+This book is intended to satisfy this need. Dependently
+types languages, such as Lean 4, are the languages today
+in which it's possible to program in this new manner. This
+book teaches integral specification, coding, and formal but
+fully automated verification in Lean. This book is derived
+generated from literate code (see Knuth) in Lean, enabling
+|students to read a well formatted book simultaneously with
+interacting with the actual Lean code and programming toosl.
 
-computatational software
-development  in traditional programming,  
-
-
-
-
-
-
-
- system requirements,
-necessarily expressed in the terms of application domain;
-specifications concerning particular machinery to be built;
-and ordinary computation, with continual checking of  
-to  
-implementations in the low-level formalisms
-of, say, imperative programming, but also to express the
-abstract mathematics of the application domain itself,
-the definitions of terms for which are prerequite to the
-expression of some particular system intended to operate
-in, with, and on that domain. 
-
-with the 
-the
-domain 
-the been trained to
-handle the formal mathematics of the domain of discourse  
-
-be will be trained to deal with the abstract
-mathematics 
-
-A premise of this course is that future programmers will
-have to understand how to weave abstract mathematical
-formal specifications and
-corresponding implementations within single   
-
-
-The goal of this course on *programming* is to equip each
-student with cognitive skills and performance capabilities
-to acquire a strong cognitive grasp of the 
-affordances provided by dependent type theory and how to use
-them to compose astoundingly rich formal abstractions
-
-computation, reasoning, 
-
-
- mental model of what that term means grounded not (only) in notions of *computation*
-
-
-an understanding of this term that encompasses not
-just types of data and operations partticular to data according
-to its type 
-
-
-
-
-This online book is generated from literate code (see Knuth) written
-in the dependently typed, mathematics-supporting programming language
-called Lean 4. The code is distributed from a GitHub repository.
+## Navigating the Book
 
 At the top of the page, from the left, one finds a sequence of icons.
 The hamburger (three-line-stack) menu shows/hides the table of contents;
@@ -90,6 +44,8 @@ the paintbrush icon is for changing the presentation color scheme; the
 magnifying icon is for text search over this book; the printer icon is
 for printing it (or saving it as a PDF for offline reading); and the last,
 GitHub, icon takes you to the GitHub repo where this book is stored.
+
+## Setting up Your Computer
 
 Everything in this course runs inside a Docker **development container,**
 a preconfigured Linux environment defined by files in this repository, that
@@ -103,13 +59,13 @@ it. To be able to do that, follow the directions here. In a nutshell,
 you will fork our repo, clone your fork of our repo, open your clone
 in VSCode; activate the Dev Containers VSCode plug-in; start up the
 "container"; then arrange your editor layout. Voila! Up and running.
-
-The benefit is that every student has an identical environment with fairly low effort.
+The benefit is that every student has an identical environment, with
+low effort.
 
 Work through the steps in order. Step 4 takes the longest; start it before
 you need it.
 
-## 1. Install the prerequisites
+### 1. Install the prerequisites
 
 You need four things on your laptop. Install them in this order.
 
@@ -140,7 +96,7 @@ offer to set this up.
 Start Docker Desktop and leave it running. The container cannot start if the
 Docker engine is not running — the single most common setup failure.
 
-## 2. Fork this repository
+### 2. Fork this repository
 
 A *fork* is your own copy of the repository on GitHub. You will do your work
 in your fork, so your changes are yours and cannot disturb the course
@@ -152,9 +108,9 @@ repository.
 
 You now have `https://github.com/YOUR-USERNAME/Lean4CS1`.
 
-## 3. Clone your fork and open it in VS Code
+### 3. Clone your fork and open it in VS Code
 
-### Windows users: configure Git first
+#### Windows users: configure Git first
 
 Do this **before you clone**. These settings affect how files are written to
 disk during the clone, so applying them afterward means re-cloning.
@@ -206,7 +162,7 @@ into the WSL 2 filesystem instead — from a WSL terminal, into your Linux home
 directory — is substantially faster. Do that only if you are comfortable with
 WSL; it is a performance improvement, not a requirement.
 
-### Clone
+#### Clone
 
 Clone *your fork*, not the original. Substitute your GitHub username:
 
@@ -228,7 +184,7 @@ pull in updates later:
 git remote add upstream https://github.com/kevinsullivan/Lean4CS1.git
 ```
 
-## 4. Reopen the project in the container
+### 4. Reopen the project in the container
 
 With the project open in VS Code, a notification should appear in the
 lower-right corner:
@@ -253,12 +209,12 @@ VS Code window reads **Dev Container: CS1**. Open a terminal
 (`` Ctrl+` ``, or Terminal → New Terminal) — you are now a user named `dev`
 inside Linux, whatever your laptop actually runs.
 
-## 5. Install the Lean toolchain and Mathlib
+### 5. Install the Lean toolchain and Mathlib
 
 Two steps remain, both run in the VS Code terminal *inside* the container.
 
 **Open any Lean file first** — for example
-`FPCourse/T01_ExpressionsFunctionsRecursion/Week00_AlgebraicTypes.lean`. The Lean 4 extension activates,
+`FPCourse/T01_ExpressionsFunctionsRecursion/W00_AlgebraicTypes.lean`. The Lean 4 extension activates,
 notices the `lean-toolchain` file, and installs the exact compiler version
 this course uses. A progress notice appears in the status bar. Wait for it to
 finish, then confirm:
@@ -293,12 +249,12 @@ correct and complete.
 > unfamiliar file names streaming past, stop it with `Ctrl+C`, run
 > `lake exe cache get`, and try again.
 
-## 6. Read the book beside the code
+### 6. Read the book beside the code
 
 The intended way to study is the rendered book on one side of the screen and
 the live, type-checked Lean source on the other.
 
-### Three commands keep the book current
+#### Three commands keep the book current
 
 You never call mdBook directly. Three `make` targets, run from the project
 root in the container terminal, cover everything you need:
@@ -315,7 +271,7 @@ after editing Lean source run plain `make`, which converts and then builds.
 Reach for `make clean` only when a build looks stale or inconsistent;
 nothing you wrote is lost, since it removes generated files only.
 
-### Start the server
+#### Start the server
 
 In the container terminal:
 
@@ -362,11 +318,11 @@ flipping between tabs.
 
 The book page for a chapter follows the source path exactly. Editing
 
-    FPCourse/T01_ExpressionsFunctionsRecursion/Week00_AlgebraicTypes.lean
+    FPCourse/T01_ExpressionsFunctionsRecursion/W00_AlgebraicTypes.lean
 
 corresponds to
 
-    .../FPCourse/T01_ExpressionsFunctionsRecursion/Week00_AlgebraicTypes.html
+    .../FPCourse/T01_ExpressionsFunctionsRecursion/W00_AlgebraicTypes.html
 
 in the book, so you can edit the address directly rather than clicking
 through the sidebar.
@@ -382,7 +338,7 @@ running while you work. If you stop it, or close the terminal it is running
 in, the forwarded address stops serving and the page goes blank instead of
 reporting an error.
 
-## 7. Track the course repository
+### 7. Track the course repository
 
 Steps 1 through 6 leave you able to work. This step connects the course
 repository to your editor, so that new assignments, corrections, and answers
@@ -400,7 +356,7 @@ installed locally does not run in the container window, which is where you
 work, so installing either one by hand would leave you with a copy in the
 wrong place and no visible benefit.
 
-### Sign in to GitHub
+#### Sign in to GitHub
 
 Click the **GitHub** icon — the Octocat silhouette — in the Activity Bar, the
 narrow strip down the left edge. If a **Login** view greets you, click **Sign in** and authorize VS Code
@@ -415,7 +371,7 @@ The extension reads the repository's `origin` and `upstream` remotes — that
 is the default of its `githubPullRequests.remotes` setting — which is why
 adding `upstream` back in step 3 matters here.
 
-### Watch the repository
+#### Watch the repository
 
 Open the course repository —
 **[github.com/kevinsullivan/Lean4CS1](https://github.com/kevinsullivan/Lean4CS1)** — and click **Watch**, at the top
@@ -427,7 +383,7 @@ Watching is the feature that notifies you. *Starring* a repository bookmarks
 it on your account and *pinning* displays it on your profile page; neither
 sends you anything, and neither changes what VS Code shows you.
 
-### Show course issues in the editor
+#### Optional: Show course issues in the editor
 
 The Issues view ships with queries about *your* repository and *your* issues.
 The course issues are not in your fork: a fork begins with none of the
@@ -469,7 +425,7 @@ reports on pull requests only, and is off until you set
 `githubPullRequests.notifications` to `pullRequests`. Email from watching the
 repository remains the dependable alert.
 
-### See new upstream commits
+#### Optional: See new upstream commits
 
 VS Code and GitLens show you the remote as of your last `git fetch`. Nothing
 streams in on its own, and `git.autofetch` is off by default; even set to
@@ -492,7 +448,7 @@ Home. Either will show you what the instructor has pushed.
 Fetching only updates what you can *see*. To bring the changes into your own
 files, merge them as described under "Working from day to day" below.
 
-## 8. Verify your setup
+### 8. Verify your setup
 
 Work down this list. If every line holds, you are ready.
 
@@ -508,7 +464,7 @@ Work down this list. If every line holds, you are ready.
 - The GitHub view's **Issues** list shows the course repository's open
       issues under **Course Issues**.
 
-## Working from day to day
+### 9. Working from day to day
 
 **Save your work.** The container is disposable; your files live in the
 cloned folder on your laptop and are safe. Commit and push regularly so your
@@ -530,7 +486,7 @@ git merge upstream/main
 If the update changes `lean-toolchain` or `lake-manifest.json`, run
 `lake exe cache get` again afterward.
 
-## When something goes wrong
+### 10. When something goes wrong
 
 | Symptom                                                         | Likely cause and remedy                                                                                                                                                                                                                                                               |
 | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

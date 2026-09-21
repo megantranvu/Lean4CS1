@@ -109,7 +109,7 @@ The server watches for changes and refreshes automatically.
 
 **Step 4 — Arrange the panels side by side.**  Drag the Simple Browser
 tab to the right half of the editor area.  Open the corresponding
-`.lean` source file (e.g., `FPCourse/T01_ExpressionsFunctionsRecursion/Week00_AlgebraicTypes.lean`)
+`.lean` source file (e.g., `FPCourse/T01_ExpressionsFunctionsRecursion/W00_AlgebraicTypes.lean`)
 in the left panel.  You now have the rendered prose on the right and the
 live, type-checked Lean source on the left.
 

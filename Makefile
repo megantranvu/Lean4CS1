@@ -14,6 +14,7 @@ BUILD_FILES := $(patsubst %.lean,src/%.md,$(SRC_FILES))
 
 # Default target: convert all .lean files to .md, then build the book
 all: $(BUILD_FILES)
+	@$(MAKE) --no-print-directory prune
 	mdbook build
 	@$(MAKE) --no-print-directory canvas
 
@@ -27,6 +28,18 @@ $(BUILD_FILES): src/%.md: %.lean scripts/convert.py
 
 # Convert only (no mdbook build)
 convert: $(BUILD_FILES)
+	@$(MAKE) --no-print-directory prune
+
+# Delete generated .md files whose .lean source is gone.  Renaming a source
+# leaves its old output behind, and since the generated files are tracked, the
+# orphan keeps getting published: E00_familiarity.lean became E00_Types.lean,
+# but src/.../E00_familiarity.md survived as a title-only page and SUMMARY.md
+# went on linking it, so the Familiarization entry rendered blank online.
+prune:
+	@find $(GENERATED_MD) -type f -name '*.md' 2>/dev/null | while read -r md; do \
+	  lean="$${md#src/}"; lean="$${lean%.md}.lean"; \
+	  if [ ! -f "$$lean" ]; then echo "Pruning orphaned $$md"; rm -f "$$md"; fi; \
+	done
 
 # Build the book (assumes convert has been run)
 build:
@@ -77,4 +90,4 @@ clean-md:
 clean:
 	rm -rf $(GENERATED_MD) book/
 
-.PHONY: all convert build a11y og slack slack-serve canvas serve clean-md clean
+.PHONY: all convert prune build a11y og slack slack-serve canvas serve clean-md clean

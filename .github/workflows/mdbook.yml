@@ -58,6 +58,12 @@ jobs:
             mkdir -p "$(dirname "$out")"
             python3 scripts/convert.py "$f" "$out"
           done
+          # Drop checked-in output whose .lean source was renamed or deleted:
+          # otherwise the orphan is still published, as a stale or blank page.
+          find src/FPCourse -name '*.md' | while read md; do
+            lean="${md#src/}"; lean="${lean%.md}.lean"
+            [ -f "$lean" ] || { echo "Pruning orphaned $md"; rm -f "$md"; }
+          done
 
       # Normalize Markdown to NFC (handles any Unicode edge cases)
       - name: Normalize Markdown files to NFC
