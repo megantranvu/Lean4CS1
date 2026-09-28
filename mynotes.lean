@@ -218,3 +218,54 @@ def e3:= PropLogic.and e1 e2
 
 def e4 := PropLogic.and X Y
 #eval eval e4 i1 -- using vals from i1
+
+
+-- 9/21
+-- shallow vs deep embedding
+-- shallow - predicate logic
+-- deep - propositional logic
+
+def e2e : Empty → Empty
+| e => e
+
+theorem f2f : False → False
+| f1 => f1
+
+
+inductive MyEmpty : Type -- no constructors
+def me2e : MyEmpty → Empty
+| me => nomatch me -- no cases to match, proving that MyEmpty is uninhabited
+
+
+inductive MyFalse : Prop where -- no constructors
+theorem mf2f : MyFalse → False
+| mf => nomatch mf -- no cases to match, proving that MyFalse is uninhabited
+
+
+def neg (a : Prop) : Prop := a → False -- a negation function
+
+example : neg MyFalse
+| mf => nomatch mf -- no cases to match, proving that MyFalse is uninhabited
+
+example : ¬ MyFalse
+| mf => nomatch mf -- no cases to match, proving that MyFalse is uninhabited
+
+
+inductive KevinIsFromCville : Prop where
+| driversLicense
+
+example : KevinIsFromCville := KevinIsFromCville.driversLicense
+
+inductive JorgIsFromToronto : Prop where
+| driversLicense
+| utilityBill
+| healthCard
+
+example : KevinIsFromCville ∧ JorgIsFromToronto :=
+And.intro
+    KevinIsFromCville.driversLicense
+    JorgIsFromToronto.healthCard
+
+
+-- prove deMorgan's laws in Lean
+-- apparently not all of deMorgan's laws are valid in Lean tho?

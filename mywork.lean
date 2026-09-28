@@ -60,3 +60,96 @@ def MyStrNatSpec : Prop := myStrNat.1 = "lean" ∧ myStrNat.2 > 0
 
 #guard 3 - 5 + 5 ≠ 3
 -- Side condition, (a - b) + b = a does hold when a >= b
+
+
+
+-- next for 9/21
+
+
+def swap_menu : Sum Chicken Fish → Sum Fish Chicken :=
+  fun menu =>
+    match menu with
+    | Sum.inl c => Sum.inr c  -- Given c : Chicken, put it on the right side using Sum.inr
+    | Sum.inr f => Sum.inl f  -- Given f : Fish, put it on the left side using Sum.inl
+
+/- @@@
+#2: PROVE: that someone who ordered "Fish, and either
+Rice or Potato" should be satisfied to be served
+"Rice or Potato, and Fish. Clearly, it's true: you
+just have to turn the plate a little! To prove it
+it would do to show there's a function that applied
+to a whole *meal, "Fish, and either Rice or Potato"
+derives and returns a meal, "either Rice or Potato,
+and Fish."
+@@@-/
+
+
+/- @@@
+That's just commutativity of × again. We proved it by
+running the whole proof strategy again for this special
+case of the general principle; but we don't have to, as
+we have a general "theorem" (swap function) for that.
+
+The reason we prefer to prove generalized theorems or
+write general-purpose functions is because we can then
+*apply* them where needed without having to reproduce
+the whole derivation from scratch. It's makes math work!
+@@@ -/
+
+def swap : ∀ (α : Type u) (β : Type v), α × β → β × α := fun _ _ (a, b) => (b, a)
+
+def swap_meal : Fish × (Rice ⊕ Potato) → (Rice ⊕ Potato) × Fish
+  | meal => swap Fish (Rice ⊕ Potato) meal
+
+/- @@@
+#3: Prove. Here's an example suggesting that × distributes
+over ⊕ just as numerical multiplication distributes over
+addition: x * (y + z) = x * y + x * z. Show that the
+same principle holds for × and ⊕, first in a specific
+example, then in general.
+@@@ -/
+
+example :
+  Fish × (Rice ⊕ Potato) → Fish × Rice ⊕ Fish × Potato
+  | (f, rop) => match rop with
+    | Sum.inl r => Sum.inl (f, r) -- fish and rice
+    | Sum.inr p => Sum.inr (f, p) -- fish and potato
+
+-- #4 Prove the other direction too.
+example :
+  (Fish × Rice) ⊕ (Fish × Potato) → Fish × (Rice ⊕ Potato)
+  | meal => match meal with
+    | Sum.inl (f, r) => (f, Sum.inl r) -- fish and rice
+    | Sum.inr (f, p) => (f, Sum.inr p) -- fish and potato
+
+/- @@@
+### The Curry-Howard Twin of ⊕ is ∨
+
+Just as *And* (∧) is the Curry-Howard twin of *×*,
+so *Or* (∨) is the twin of ⊕. Go back and study the
+inductive definition of *Sum* (⊕) then compare with
+it's logical counterpart, `Or` (∨), copied below.
+
+```lean
+inductive Or (a b : Prop) : Prop where
+  | inl (h : a) : Or a b
+  | inr (h : b) : Or a b
+```
+
+Infix notation for the type, *Or P Q*, is *P ∨ Q*.
+@@@ -/
+
+
+-- #5: PROVE: `Or` (∨) is commutative *in general*
+
+example {P Q : Prop} : P ∨ Q → Q ∨ P
+| _ => sorry  -- replace with your code
+
+-- #6: Prove ∧ distributes over or in the usual way
+example {P Q R : Prop } : P ∧ (Q ∨ R) → P ∧ Q ∨ P ∧ R
+| _ => sorry  -- replace this line with your code
+
+-- #7: Prove that ∨ is associative. It's left associative
+-- so note that P ∨ Q ∨ R is read as (P ∨ Q) ∨ R.
+example {P Q R : Prop } :  P ∨ Q ∨ R → (P ∨ Q) ∨ R
+| _ => sorry  -- replace this line with your code
