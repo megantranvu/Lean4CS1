@@ -269,3 +269,84 @@ And.intro
 
 -- prove deMorgan's laws in Lean
 -- apparently not all of deMorgan's laws are valid in Lean tho?
+
+
+-- 9/28
+
+-- classical logic: P ∨ ¬P is always true (law of excluded middle)
+-- constructive logic: P ∨ ¬P is not generally valid, we have to have proof
+
+-- proof by negation, derive proof of ¬P by assuming P and deriving False
+-- proof by contradiction, derive proof of P by assuming ¬P and deriving False (basically deriving ¬¬P)
+
+-- classical logic: ¬¬P → P (double-negation elimination)
+-- constructive logic: ¬¬P → P is not generally valid
+-- so proof by contradiction doesn't work in constructive logic
+
+
+
+-- 9/30
+
+example {P : Prop} : ¬(P ∧ ¬P) :=
+fun h => -- assume we have proof of P ∧ ¬P
+  let p : P := h.left
+  let np : ¬P := h.right
+  np p
+
+-- different way to prove same thing...
+example {P : Prop} : ¬(P ∧ ¬P) :=
+fun (pnp : P ∧ ¬P) =>
+pnp.right pnp.left -- applying ¬P to P to get False
+
+-- sorry: key word used to indicate placeholder in proof
+
+-- a predicate is like a proposition with placeholders...
+-- it's like a property
+
+inductive Dog : Type where
+| Iris : Dog
+| Fido : Dog
+| Sargent : Dog
+
+inductive Friendly : Dog → Prop where -- Friendly is a predicate on Dogs
+| irisFriendly : Friendly Iris -- Friendly applied to Iris returns proof
+| fidoFriendly : Friendly Fido
+
+inductive Furry : Dog → Prop where -- Furry is a predicate on Dogs
+| irisFurry : Furry Iris -- Furry applied to Iris returns proof
+| sargentFurry : Furry Sargent
+
+example : Friendly Iris ∧ Furry Iris :=
+And.intro Friendly.irisFriendly Furry.irisFurry
+
+-- predicate is a function that takes some object and returns a Prop
+def Suitable (d : Dog) : Prop := -- d is in global scope
+Friendly d ∧ Furry d
+
+def Suitable' : Dog → Prop :=
+fun d => Friendly d ∧ Furry d -- d is in the scope of the function
+
+example : Suitable Iris :=
+And.intro Friendly.irisFriendly Furry.irisFurry
+
+#check Friendly
+
+-- to prove ∀, we need a function
+
+example : ∀ d : Dog, Friendly d := -- Friendly d is a Prop
+fun d => -- assume we get some dog
+  match d with
+  | Dog.Iris => Friendly.irisFriendly -- the proof is a value of Friendly d
+  | Dog.Fido => Friendly.fidoFriendly
+  | Dog.Sargent => sorry
+
+example : ¬(∀ d : Dog, Friendly d) :=
+fun allDogsFriendly =>
+let sf := allDogsFriendly Dog.Sargent -- we don't have a proof of Friendly Sargent
+nomatch sf
+
+example : ∃ (d : Dog), Friendly d :=
+  ⟨Dog.Iris, Friendly.irisFriendly⟩ -- proof of ∃ is pair (witness and proof)
+
+example : ∃ (d : Dog), Friendly d :=
+Exists.intro Dog.Iris Friendly.irisFriendly -- intro rule for Exists

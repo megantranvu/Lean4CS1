@@ -27,7 +27,7 @@ nation over disjunction (not over or).
 theorem DM3 : ∀ (P Q : Prop), ¬(P ∨ Q) → ¬P ∧ ¬Q :=
 fun P Q => -- given some P and some Q
 fun h => -- assume ¬(P ∨ Q)
-  let np : ¬P := fun p => h (Or.inl p) -- function takes in P and returnsFalse
+  let np : ¬P := fun p => h (Or.inl p) -- function takes in P and returns False
   -- (Or.inl p) makes a P ∨ Q
   -- then h(P ∨ Q) gives False
   let nq : ¬Q := fun q => h (Or.inr q) -- function takes in Q and returns False

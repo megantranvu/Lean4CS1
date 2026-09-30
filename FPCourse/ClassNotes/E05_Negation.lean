@@ -93,22 +93,32 @@ would let us split on P, but is not available constructively.
 -- Warmup: Negation
 
 theorem noContradiction {P : Prop} : ¬(P ∧ ¬P) :=
-  fun pandNotP => pandNotP.right pandNotP.left
+-- assume we have P and ¬P
+-- we need to derive False
+fun pandNotP =>
+let p : P := pandNotP.left -- get proof of P
+let np : ¬P := pandNotP.right -- get function P → False
+np (p) -- pass P to function to get False
 
 
 
 theorem deMorganNotOr (P Q : Prop) : ¬(P ∨ Q) → (¬P ∧ ¬Q) :=
-  fun notPorQ =>
+  fun notPorQ => -- assume we have ¬(P ∨ Q)
     And.intro
       (fun p => notPorQ (Or.inl p))
+      -- assume we have proof of p
+      -- make proof of p ∨ q with Or.inl
+      -- pass it through notPorQ to get False
+      -- we have derived False from assuming p, so we have ¬P
       (fun q => notPorQ (Or.inr q))
+      -- same stuff here
 
 theorem deMorganAndNot (P Q : Prop) : (¬P ∧ ¬Q) → ¬(P ∨ Q) :=
-  fun notPandNotQ =>
-    fun porq =>
+  fun notPandNotQ => -- assume we have ¬P ∧ ¬Q
+    fun porq => -- assume we have proof of P ∨ Q, derive False
       match porq with
-      | Or.inl p => notPandNotQ.left p
-      | Or.inr q => notPandNotQ.right q
+      | Or.inl p => notPandNotQ.left p -- apply proof of ¬P to p
+      | Or.inr q => notPandNotQ.right q -- apply proof of ¬Q to q
 
 theorem deMorganOrNot (P Q : Prop) : (¬P ∨ ¬Q) → ¬(P ∧ Q) :=
   fun notPorNotQ =>
@@ -142,6 +152,20 @@ p : P
 example (P Q : Prop) : ¬(P ∧ Q) → (¬P ∨ ¬Q) :=
   fun notPandQ =>
     Or.inl (fun p => notPandQ (And.intro p _))
+-- we know at least one is false, but we don't know which one
+
+-- but it would work classically
+example (P Q : Prop) (em : ∀ (X : Prop), X ∨ ¬X) : ¬(P ∧ Q) → (¬P ∨ ¬Q) :=
+  fun notPandQ => -- assume we have ¬(P ∧ Q), function from P ∧ Q to False
+    match em P with -- do we have P or ¬P?
+    | Or.inr np => Or.inl np -- if we have ¬P, we can make ¬P ∨ ¬Q
+    | Or.inl p => -- if we have P, we need to check Q
+      match em Q with -- do we have Q or ¬Q?
+      | Or.inr nq => Or.inr nq -- if we have ¬Q, we can make ¬P ∨ ¬Q
+      | Or.inl q => -- if we have Q, we need to derive a contradiction
+        -- If we have both p and q, we can form P ∧ Q
+        -- and feed it to notPandQ to get False.
+        False.elim (notPandQ ⟨p, q⟩)
 
 example (P Q : Prop) : (¬P ∨ ¬Q) → ¬(P ∧ Q) :=
   fun notPorNotQ =>
