@@ -1,81 +1,20 @@
 /- @@@
-
-# Notes 9/21/26
-
-
-- Curry-Howard Injection: Deductive Reasoning (Prop) => Computation (Type)
-
-- Deep vs Shallow embedding of abstract theories into Lean 4
-  - Deep embedding: Syntax as a type with constructor for each kind of term (propositional logic)
-  - Shallow embedding: Syntax as collection of types, one for each kind of term (predicate logic)
-
-  - Empty and False
-  - Unit and True
-  - Prod and And
-  - Sum and Or
-  - -> Empty and -> False (Not!)
-
-
+# Classical vs. Constructive Logic
 @@@ -/
 
-def e2e : Empty → Empty
-| e => e
+/- @@@
+## Negation in Classical and Constructive Logic
 
-def fimpf : False → False
-| f => f
-
-inductive MyEmpty : Type where
-
-def me2e : MyEmpty → Empty
-| m => nomatch m
-
-inductive MyFalse : Prop where
--- | mk
-
-theorem myFalseIsReallyFalse : MyFalse → False
-| m => nomatch m
-
-def neg (a : Prop) : Prop := a → False
-
-#check MyFalse
-
-example : neg MyFalse
-| m => nomatch m
-
-example : ¬MyFalse
-| m => nomatch m
-
-#check (@And)
-
-inductive KevinIsFromCville : Prop where
-| driversLicense
-
-example : KevinIsFromCville := KevinIsFromCville.driversLicense
-
-inductive JorgIsFromToronto : Prop where
-| driversLicense
-| utilityBill
-| healthCard
-
-example : And KevinIsFromCville JorgIsFromToronto :=
-And.intro
-  KevinIsFromCville.driversLicense
-  JorgIsFromToronto.healthCard
-
-inductive Cat : Type where
-| siamese
-| tabby
-
-example : ¬ (Cat.tabby = Cat.siamese)
-| m => nomatch m
-
-example :
-JorgIsFromToronto.driversLicense = JorgIsFromToronto.healthCard :=
-rfl
-
+We now turn to the interplay between negation and the two logics.
+DeMorgan's laws expose the first asymmetry: some directions hold
+constructively and some need an extra classical assumption. From
+there we distinguish proof by negation from proof by contradiction,
+and isolate excluded middle as the single assumption that bridges
+the gap.
+@@@ -/
 
 /- @@@
-## DeMorgan's Laws
+### DeMorgan's Laws
 
 For arbitrary propositions P and Q, negation distributes over
 disjunction in both directions, constructively:
@@ -101,6 +40,9 @@ let np : ¬P := pandNotP.right -- get function P → False
 np (p) -- pass P to function to get False
 
 
+-- example { P : Prop } : ¬¬P → P :=
+--   fun nnp =>
+--     _
 
 theorem deMorganNotOr (P Q : Prop) : ¬(P ∨ Q) → (¬P ∧ ¬Q) :=
   fun notPorQ => -- assume we have ¬(P ∨ Q)
@@ -126,6 +68,7 @@ theorem deMorganOrNot (P Q : Prop) : (¬P ∨ ¬Q) → ¬(P ∧ Q) :=
       match notPorNotQ with
       | Or.inl notP => notP pandq.left
       | Or.inr notQ => notQ pandq.right
+
 
 theorem deMorganNotOrIff (P Q : Prop) : ¬(P ∨ Q) ↔ (¬P ∧ ¬Q) :=
   Iff.intro (deMorganNotOr P Q) (deMorganAndNot P Q)
@@ -174,8 +117,19 @@ example (P Q : Prop) : (¬P ∨ ¬Q) → ¬(P ∧ Q) :=
       | Or.inl notP => notP pandq.left
       | Or.inr notQ => notQ pandq.right
 
+/--
+error: don't know how to synthesize placeholder
+context:
+P Q : Prop
+em : ∀ (X : Prop), X ∨ ¬X
+⊢ ¬(P ∧ Q) → ¬P ∨ ¬Q
+-/
+#guard_msgs in
+example (P Q : Prop)  (em : ∀ (X : Prop), X ∨ ¬X) : ¬(P ∧ Q) → (¬P ∨ ¬Q) :=
+  _
+
 /- @@@
-## Proof by Negation and by Contradiction
+### Proof by Negation and by Contradiction
 
 Constructively, we can prove ¬P by assuming P and deriving False:
 that is exactly what a proof of P → False does. The theorem above
@@ -209,7 +163,7 @@ example (P : Prop) : ¬¬P → P :=
   fun notNotP => False.elim (notNotP _)
 
 /- @@@
-## One Additional Assumption: Excluded Middle
+### One Additional Assumption: Excluded Middle
 
 Put a single additional assumption on the left of an implication:
 
@@ -318,75 +272,9 @@ In Lean, proofs in `Prop` are erased during compilation anyway,
 including constructive proofs. So going classical does not delete
 existing program code. Rather, using `em` adds a logical capability
 without adding an executable implementation of that capability.
-@@@ -/
 
-/- @@@
-## Next Lecture: Existence, Witnesses, and Nonconstructive Proofs
-
-`∃ x : α, R x` says that some value x has property R. To introduce
-an existential proof constructively, provide a *witness* w : α
-and a proof of R w. `Exists.intro` packages these together:
-@@@ -/
-
-example : ∃ n : Nat, n = 3 :=
-  Exists.intro 3 rfl
-
-/- @@@
-To eliminate an existential proof, unpack its witness and evidence
-and use them to prove a conclusion S. The conclusion must not
-depend on which witness was hidden inside the existential:
-@@@ -/
-
-example {α : Type} (R : α → Prop) (S : Prop) :
-    (∃ x : α, R x) → (∀ x : α, R x → S) → S :=
-  fun existsRx =>
-    fun useWitness =>
-      match existsRx with
-      | Exists.intro w rw => useWitness w rw
-
-/- @@@
-This is reasoning with a witness inside a proof. Lean's `Exists`
-lives in `Prop`; unpacking it to prove S does not give us a general
-executable function that returns its witness as data.
-
-Classically, we can also prove existence by contradiction, without
-explicitly constructing a witness. Substitute `∃ x, R x` for P
-in our previous proof:
-@@@ -/
-
-example {α : Type} (R : α → Prop) :
-    (¬(∃ x : α, R x) → False) → ∃ x : α, R x :=
-  fun notNotExists =>
-    match em (∃ x : α, R x) with
-    | Or.inl existsRx => existsRx
-    | Or.inr notExists => False.elim (notNotExists notExists)
-
-/- @@@
-## A Provocation: Banach–Tarski
-
-The Banach–Tarski theorem (1924) says that a solid ball in
-three-dimensional space can be partitioned into finitely many
-sets, then those sets moved by rotations and translations to
-form two disjoint balls, each the same size as the original.
-The usual proof uses the axiom of choice. The pieces cannot all
-have ordinary volume: nonmeasurable sets are involved. This is
-a theorem about sets of points, not a physical recipe for cutting
-up a ball and doubling its material.
-See [Banach and Tarski's original paper](https://pldml.icm.edu.pl/pldml/element/bwmeta1.element.bwnjournal-article-fmv6i1p27bwm)
-and [Terence Tao's explanation](https://www.math.ucla.edu/~tao/resource/general/121.1.00s/tarski.html).
-
-It vividly illustrates the constructive objection: what counts
-as evidence that these pieces exist if we cannot construct them
-in the required sense? A constructivist does not have to accept
-the classical proof as a constructive existence proof. The issue
-is the justification of existence, not merely that the conclusion
-is surprising. Excluded middle alone should not be confused with
-the choice principle used in the Banach–Tarski argument.
-
-Historically, this did not launch constructive mathematics:
-Brouwer's foundational work dates to 1907–1908, before this
-theorem. Use Banach–Tarski as an illustration of the demand for
-construction that motivated constructive approaches, rather than
-as their historical cause. Heyting later formalized intuitionistic
-(constructive) logic. See [the history of intuitionistic logic](https://plato.stanford.edu/entries/intuitionistic-logic-development/).
+For a worked example of what this costs in practice, see the odd
+perfect number question in `E07_Exists.lean`, where a one-line
+classical proof settles that an existential has an answer and
+still leaves us with no code to compute it.
 @@@ -/
