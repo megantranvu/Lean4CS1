@@ -89,6 +89,7 @@ def kzero := KNat.zero
 def kone := KNat.succ kzero
 def ktwo := KNat.succ kone
 def kthree := KNat.succ ktwo
+def kfour := KNat.succ kthree
 
 
 /- @@@
@@ -173,6 +174,27 @@ see if you can define `hyperop`, taking three
 arguments, the first being the `hyper-depth`,
 in which case `tet a b` is `hyperop 4 a b`.
 @@@ -/
+def tet : KNat → KNat → KNat
+| _, KNat.zero => kone
+| a, KNat.succ b' => exp a (tet a b')
+
+def hyperop' : KNat → KNat → KNat → KNat
+| kzero,  a, _ => a          -- 0th: identity (returns a)
+| kone,   a, b => inc a      -- 1st: increment
+| ktwo,   a, b => add a b    -- 2nd: addition
+| kthree, a, b => mul a b    -- 3rd: multiplication
+| kfour,  a, b => tet a b    -- 4th: tetration
+| _,      _, _ => kzero      -- fallback for depth > 4
+
+def hyperop : KNat → KNat → KNat → KNat
+| KNat.zero,                         a, _ => a
+| KNat.succ KNat.zero,               a, b => inc a
+| KNat.succ (KNat.succ KNat.zero),   a, b => add a b
+| KNat.succ (KNat.succ (KNat.succ KNat.zero)), a, b => mul a b
+| KNat.succ (KNat.succ (KNat.succ (KNat.succ KNat.zero))), a, b => tet a b
+| _, _, _ => kzero
+
+
 
 /- @@@
 ### Classes
@@ -254,6 +276,21 @@ to provide notations and more. Use your search
 engine or agent to find the names of the right
 classes in Lean's libraries for these operations.
 
+-/
+
+def neg (n : KNat) : KNat := kzero -- can't have negatives in the natural numbers
+
+def sub : KNat → KNat → KNat
+| a, KNat.zero => a -- anything minus zero is itself
+| a, KNat.succ b' => dec (sub a b') -- call decrement function
+
+instance : Neg KNat where
+  neg := neg
+
+instance : Sub KNat where
+  sub := sub
+
+/-
 2. Replace Nat with KNat in the following
 definition of the syntax and semantics of
 our little language of arithmetic. Extend
@@ -279,13 +316,22 @@ end KNat
 namespace Arith
 open KNat
 
+inductive Variable where
+| Xvar
+
+open Variable
+def VarInterp := Variable → KNat
+
 /- @@@
 ## Syntax
 @@@ -/
 
 inductive Expr where
-| lit (n : Nat) : Expr
+| lit (n : KNat) : Expr
+| var (v : Variable) : Expr
 | add (e1 e2 : Expr) : Expr
+| sub (e1 e2 : Expr) : Expr
+| neg (e : Expr) : Expr
 open Expr
 
 
@@ -293,27 +339,31 @@ open Expr
 ## Operational Semantics
 @@@ -/
 
-def arithEval : Expr → Nat
-| Expr.lit n => n
-| Expr.add e1 e2 => Nat.add (arithEval e1) (arithEval e2)  -- (arithEval e1) + (arithEval e2)
+def arithEval : VarInterp → Expr → KNat
+  | _, Expr.lit n     => n
+  | interp, Expr.var v     => interp v
+  | interp, Expr.add e1 e2 => arithEval interp e1 + arithEval interp e2
+  | interp, Expr.sub e1 e2 => arithEval interp e1 - arithEval interp e2
+  | interp, Expr.neg e     => -(arithEval interp e)
 
 
 /- @@@
 ## Examples
 @@@ -/
 -- examples expressions using our syntax
-def e1 : Expr := lit 1
-def e7 : Expr := lit 7
-def e3 : Expr := add e1 e7
-def e4 : Expr :=   -- 7 + (6 + 9)
-  add
-    (lit 7)
-    (add
-      (lit 6)
-      (lit 9)
-    )
 
-#eval arithEval e4
+def i1 : VarInterp :=
+  fun (v : Variable) =>
+    match v with
+    | Xvar => kone
+
+def e1 : Expr := lit kone
+def e2 : Expr := lit ktwo
+def e3 : Expr := add e1 e2
+def e4 : Expr := add (var Xvar) e1
+
+#eval arithEval i1 e3
+#eval arithEval i1 e4
 
 
 
