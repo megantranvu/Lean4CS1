@@ -1,6 +1,8 @@
 import Mathlib.Algebra.Group.Nat.Defs
 namespace AbstractAlgebra
 
+-- this compiles properly when added to E11_abstractAlgebra.lean hopefully
+
 /- @@@
 ## EXERCISES
 

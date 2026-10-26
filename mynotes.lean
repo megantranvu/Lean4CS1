@@ -219,7 +219,6 @@ def e3:= PropLogic.and e1 e2
 def e4 := PropLogic.and X Y
 #eval eval e4 i1 -- using vals from i1
 
-
 -- 9/21
 -- shallow vs deep embedding
 -- shallow - predicate logic
@@ -431,7 +430,7 @@ def arithEval : ArithExpr → Nat
 
 #eval arithEval a1plus7
 
--- anotha way
+-- another way
 def p1 : ArithExpr := plus (lit 1) (lit 7)
 #eval arithEval p1
 
