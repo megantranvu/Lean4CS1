@@ -139,6 +139,43 @@ def add : KNat → KNat → KNat                -- Addition function
   | a, KNat.zero   => a
   | a, KNat.succ b => inc (add a b)
 
+
+def sub : KNat → KNat → KNat
+| n, KNat.zero => n
+| n, KNat.succ m' => dec (sub n m')
+
+#eval sub kthree ktwo
+#eval sub ktwo kthree
+#eval sub kthree kthree
+
+
+def eq : KNat → KNat → Bool
+| KNat.zero, KNat.zero => true
+| KNat.succ n', KNat.succ m' => eq n' m'
+| _, _ => false
+
+#eval eq kthree kthree
+#eval eq kthree kone
+#eval eq kone kthree
+
+def le : KNat → KNat → Bool
+| (KNat.succ n'), (KNat.succ m') => le n' m'
+| KNat.succ _n', KNat.zero => false
+| KNat.zero, _  => true
+
+#eval le kthree kthree
+#eval le kthree kone
+#eval le kone kthree
+
+def gt : KNat → KNat → Bool :=
+  fun n m => !le n m
+
+def lt : KNat → KNat → Bool :=
+  fun n m => le n m && !(eq n m)
+
+def ge : KNat → KNat → Bool :=
+  fun n m => gt n m || eq n m   --!(lt n m)
+
 /- @@@
 Whereas addition is interated incrementing,
 multiplication is iterated addition. To get
@@ -246,11 +283,6 @@ etc.
 #eval ktwo * (ktwo + ktwo)   -- eight!
 #eval ktwo +  ktwo * ktwo    -- six
 #eval ktwo + (ktwo * ktwo)   -- six
-
-/- @@@
-
-@@@ -/
-
 
 def addAnyTypeAsLongItsAddable {α : Type} [Add α] : α → α → α
 | a, b => a + b
