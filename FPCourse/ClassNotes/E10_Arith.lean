@@ -303,10 +303,11 @@ def addAnyTypeAsLongItsAddable {α : Type} [Add α] : α → α → α
 EXERCISES
 
 1. Extend KNat algebra with operations for
-unary Negation and Subtraction, and instances
-to provide notations and more. Use your search
-engine or agent to find the names of the right
-classes in Lean's libraries for these operations.
+unary Negation (haha) and Subtraction, and
+instances to provide notations and more. Use
+your search engine or agent to find the names
+of the right classes in Lean's libraries for
+these operations.
 
 -/
 

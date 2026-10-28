@@ -376,8 +376,8 @@ def mfold {α : Type} [Monoid α] : List α → α
 | List.nil      => Monoid.id
 | List.cons h t => Monoid.op h (mfold t)
 
-#eval mfold (α := Nat) [2, 3, 4]              -- 9  (uses the Monoid Nat instance: +, 0)
-#eval mfold (α := String) ["ab", "cd", "ef"]  -- "abcdef"
+#eval mfold [2, 3, 4]              -- 9  (uses the Monoid Nat instance: +, 0)
+#eval mfold ["ab", "cd", "ef"]  -- "abcdef"
 ```
 
 And here's `map` and `mfold` working together -- the
@@ -416,8 +416,8 @@ def foldMonoid {α : Type} [_root_.Monoid α] (xs : List α) : α :=
 def foldAddMonoid {α : Type} [AddMonoid α] (xs : List α) : α :=
   xs.foldr (· + ·) 0
 
-#eval foldMonoid    (α := Nat) [2, 3, 4]   -- 24, via the library's Monoid Nat    ( *, 1 )
-#eval foldAddMonoid (α := Nat) [2, 3, 4]   -- 9,  via the library's AddMonoid Nat ( +, 0 )
+#eval foldMonoid   [2, 3, 4]   -- 24, via the library's Monoid Nat    ( *, 1 )
+#eval foldAddMonoid [2, 3, 4]   -- 9,  via the library's AddMonoid Nat ( +, 0 )
 ```
 
 Same list, two different folds, both resolved by typeclass search
