@@ -41,3 +41,5 @@ def myFold'
 def myMap {α β : Type} (f : α → β) : List α → List β
 | [] => []
 | h::t => f h :: myMap f t
+
+#eval myMap (fun n => n*n) [1, 2, 3]
