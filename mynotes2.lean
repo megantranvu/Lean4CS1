@@ -43,3 +43,27 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 | h::t => f h :: myMap f t
 
 #eval myMap (fun n => n*n) [1, 2, 3]
+
+
+
+-- 10/28
+-- 2nd highest bid, auction theory
+
+-- Option, List, and Tree are containers, they are type to type builders
+-- ex: when List gets type Nat, it makes type List Nat
+#check List
+
+-- look at how size fun works in E12 notes
+-- and read the rest of the chapter
+
+
+
+-- 11/2
+
+-- moving on to E13
+
+-- a Group is a monoid with an inverse function
+-- groups are symmetry preserving transformations?
+-- simple group: can't be broken down into smaller groups
+-- torsor: originless plane where points live, can move between points with vectors
+-- torsor over a group?
