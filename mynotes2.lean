@@ -70,6 +70,8 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 
 -- 11/4
 --onto E14
+-- a Monoid is a set with addition
+-- a Group is a set with addition and subtraction
 -- a Ring is a set with addition, subtraction, and multiplication
 -- a Field is a set with addition, subtraction, multiplication, and division
 
@@ -80,7 +82,13 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 -- kind of works like natural numbers mod n
 -- (1 : Fin 3) + (2 : Fin 3) = 0 (3 is out of bounds, so it wraps around to 0)
 
--- Group Nat is a "typeclass instance" of Group
+-- *** Group Nat is a "typeclass instance" of Group, it is instantiated for type Nat
 -- vector space vs affine space?
+-- affine space is torsor over module?
 -- read about types of groups in E12, there's like cyclic groups
 -- Torsor is set of points with Group action?
+
+
+-- 11/9
+
+-- structure keyword is like inductive, but it only has one constructor
