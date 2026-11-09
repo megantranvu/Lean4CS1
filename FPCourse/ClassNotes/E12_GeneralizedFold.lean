@@ -120,6 +120,8 @@ zero -- so a safe `pred` hands back `none` there instead of lying
 and calling it zero again:
 @@@ -/
 
+#check (Option)
+
 def pred : Nat → Option Nat
 | Nat.zero   => none
 | Nat.succ n => some n
@@ -348,7 +350,7 @@ def increment {F : Type → Type} [LawfulMap F] (xs : F Nat) : F Nat :=
 #eval increment [1, 2, 3]            -- [2, 3, 4]
 #eval increment (some 5)             -- some 6
 #eval increment (none : Option Nat)  -- none
-#eval increment sampleTree            -- Tree with 2, 3, 4
+#eval toList (LawfulMap.map (· + 1) sampleTree)  -- [2, 3, 4]
 
 /- @@@
 ## EXERCISES

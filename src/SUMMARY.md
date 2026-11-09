@@ -68,6 +68,11 @@
 - [Map, Reduce, and Monoids](./FPCourse/ClassNotes/E11_abstractAlgebra.md)
 - [Side Notes (2026-10-26)](./FPCourse/ClassNotes/sideNotes_20261026.md)
 - [Foldable: Generalizing Fold Beyond List](./FPCourse/ClassNotes/E12_GeneralizedFold.md)
+- [Groups: Monoids With Inverses](./FPCourse/ClassNotes/E13_Groups.md)
+- [Torsors: Free and Transitive Group Actions](./FPCourse/ClassNotes/E13_Torsors.md)
+- [Affine Spaces: Geometry Without an Origin](./FPCourse/ClassNotes/E14_AffineSpace.md)
+- [Vector Spaces: Modules Over a Field](./FPCourse/ClassNotes/E14_VectorSpace.md)
+- [Theory, Implementation, and Proof](./FPCourse/ClassNotes/E15_Theory_Impl_Proof.md)
 
 ---
 
