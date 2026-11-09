@@ -92,3 +92,5 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 -- 11/9
 
 -- structure keyword is like inductive, but it only has one constructor
+-- class keyword vs instance keyword: class is like a typeclass, instance is like an implementation of that typeclass?
+-- inferInstance keyword: tells Lean to search database for an instance of a typeclass
