@@ -205,7 +205,7 @@ class AffineSpace (V : Type) (P : Type) where
 - You cannot accidentally write `p + p` (addition not defined on points)
 - The distinction between points and vectors is *enforced by the compiler*
 
-Contrast this with the vector space formalization in E14_VectorSpace.lean:
+Contrast this with the vector space formalization in E15_VectorSpace.lean:
 
 ```lean
 class VectorSpace (F V : Type) ... where

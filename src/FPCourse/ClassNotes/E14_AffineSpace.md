@@ -169,12 +169,17 @@ First the group of pairs, which is where the componentwise arithmetic lives:
 instance : Group (Rat × Rat) where
   op      : Rat × Rat → Rat × Rat → Rat × Rat := fun (a, b) (c, d) => (a + c, b + d)
   id      : Rat × Rat := (0, 0)
-  assoc   : ∀ a b c : Rat × Rat, ((a.1 + b.1) + c.1, (a.2 + b.2) + c.2) = (a.1 + (b.1 + c.1), a.2 + (b.2 + c.2)) := fun _ _ _ => by simp [Rat.add_assoc]
-  idLeft  : ∀ a : Rat × Rat, (0 + a.1, 0 + a.2) = a := fun _ => by simp
-  idRight : ∀ a : Rat × Rat, (a.1 + 0, a.2 + 0) = a := fun _ => by simp
+  assoc   : ∀ a b c : Rat × Rat, ((a.1 + b.1) + c.1, (a.2 + b.2) + c.2) = (a.1 + (b.1 + c.1), a.2 + (b.2 + c.2)) :=
+    fun a b c => Prod.ext (Rat.add_assoc a.1 b.1 c.1) (Rat.add_assoc a.2 b.2 c.2)
+  idLeft  : ∀ a : Rat × Rat, (0 + a.1, 0 + a.2) = a :=
+    fun a => Prod.ext (Rat.zero_add a.1) (Rat.zero_add a.2)
+  idRight : ∀ a : Rat × Rat, (a.1 + 0, a.2 + 0) = a :=
+    fun a => Prod.ext (Rat.add_zero a.1) (Rat.add_zero a.2)
   inv     : Rat × Rat → Rat × Rat := fun (a, b) => (-a, -b)
-  invLeft : ∀ a : Rat × Rat, (-a.1 + a.1, -a.2 + a.2) = (0, 0) := fun (a, b) => by ext <;> simp
-  invRight: ∀ a : Rat × Rat, (a.1 + (-a.1), a.2 + (-a.2)) = (0, 0) := fun (a, b) => by ext <;> simp
+  invLeft : ∀ a : Rat × Rat, (-a.1 + a.1, -a.2 + a.2) = (0, 0) :=
+    fun a => Prod.ext (Rat.neg_add_cancel a.1) (Rat.neg_add_cancel a.2)
+  invRight: ∀ a : Rat × Rat, (a.1 + (-a.1), a.2 + (-a.2)) = (0, 0) :=
+    fun a => Prod.ext (Rat.add_neg_cancel a.1) (Rat.add_neg_cancel a.2)
 ```
 
 Now `Vector2` becomes a group by *transporting* that instance across the
@@ -184,16 +189,26 @@ pairs by `congrArg` -- "equal arguments give equal results" -- which lifts an
 equation on pairs to an equation on `Vector2`. No arithmetic is redone.
 ```lean
 instance : Group Vector2 where
-  op v w      := ⟨Group.op v.toPair w.toPair⟩
-  id          := ⟨Group.id⟩
-  inv v       := ⟨Group.inv v.toPair⟩
+  op v w :    Vector2      := ⟨Group.op v.toPair w.toPair⟩
+  id :        Vector2         := ⟨Group.id⟩
+  inv v :     Vector2       := ⟨Group.inv v.toPair⟩
   assoc a b c := congrArg Vector2.ofPair (Group.assoc a.toPair b.toPair c.toPair)
   idLeft a    := congrArg Vector2.ofPair (Group.idLeft a.toPair)
   idRight a   := congrArg Vector2.ofPair (Group.idRight a.toPair)
   invLeft a   := congrArg Vector2.ofPair (Group.invLeft a.toPair)
   invRight a  := congrArg Vector2.ofPair (Group.invRight a.toPair)
+
+
+#check congrArg
 ```
 
+congrArg.{u, v}
+  {α : Sort u}
+  {β : Sort v}
+  {a₁ a₂ : α}
+  (f : α → β)
+  (h : a₁ = a₂) :
+  f a₁ = f a₂
 And the affine space itself. Read the two operation types carefully, because
 they are the whole design:
 
@@ -204,7 +219,25 @@ they are the whole design:
 `q` is `q` combined with the undoing of `p`. For ℚ² that computes exactly the
 componentwise difference, but writing it group-theoretically makes all four
 proofs one-liners, since each is just associativity and the inverse laws.
+Two cancellation facts about any group, proved once so that the last two
+affine laws become single terms. Each is a `calc` chain whose every step
+names the axiom it uses -- associativity, then an inverse law, then the
+identity law.
 ```lean
+theorem op_inv_op_cancel {α : Type} [Group α] (a b : α) :
+    Group.op (Group.op a (Group.inv b)) b = a :=
+  calc Group.op (Group.op a (Group.inv b)) b
+      = Group.op a (Group.op (Group.inv b) b) := Group.assoc a (Group.inv b) b
+    _ = Group.op a Group.id                   := congrArg (Group.op a) (Group.invLeft b)
+    _ = a                                     := Group.idRight a
+
+theorem op_op_inv_cancel {α : Type} [Group α] (a b : α) :
+    Group.op (Group.op a b) (Group.inv b) = a :=
+  calc Group.op (Group.op a b) (Group.inv b)
+      = Group.op a (Group.op b (Group.inv b)) := Group.assoc a b (Group.inv b)
+    _ = Group.op a Group.id                   := congrArg (Group.op a) (Group.invRight b)
+    _ = a                                     := Group.idRight a
+
 instance : AffineSpace Vector2 Point2 where
   groupV    := inferInstance
   vadd v p  := ⟨Group.op v.toPair p.toPair⟩
@@ -215,13 +248,9 @@ instance : AffineSpace Vector2 Point2 where
   -- 0 +ᵥ p = p is the left identity law
   vaddZero p := congrArg Point2.ofPair (Group.idLeft p.toPair)
   -- (q -ᵥ p) +ᵥ p = q: the `inv p` cancels against the `p`
-  vsubAdd p q := by
-    show Point2.ofPair (Group.op (Group.op q.toPair (Group.inv p.toPair)) p.toPair) = q
-    rw [Group.assoc, Group.invLeft, Group.idRight]
+  vsubAdd p q := congrArg Point2.ofPair (op_inv_op_cancel q.toPair p.toPair)
   -- (v +ᵥ p) -ᵥ p = v: the same cancellation, one step further along
-  addVsub v p := by
-    show Vector2.ofPair (Group.op (Group.op v.toPair p.toPair) (Group.inv p.toPair)) = v
-    rw [Group.assoc, Group.invRight, Group.idRight]
+  addVsub v p := congrArg Vector2.ofPair (op_op_inv_cancel v.toPair p.toPair)
 ```
 
 This instance encodes a fundamental truth: the rational plane has no

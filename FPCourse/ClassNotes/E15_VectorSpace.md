@@ -515,7 +515,7 @@ Infinite-dimensional vector spaces with analysis (limits, continuity) built in. 
 
 ## Vector Spaces in the Lean Formalization
 
-The `VectorSpace` typeclass in E14_VectorSpace.lean reflects the choice to collapse distinctions:
+The `VectorSpace` typeclass in E15_VectorSpace.lean reflects the choice to collapse distinctions:
 
 ```lean
 class VectorSpace (F V : Type) ... where
