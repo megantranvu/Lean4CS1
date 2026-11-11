@@ -173,6 +173,27 @@ class Group (α : Type) extends Monoid α where
   invRight: ∀ a : α, op a (inv a) = id
 ```
 
+### Where the Fields Live
+
+Notice that `op`, `id`, `assoc`, `idLeft` and `idRight` do not appear in the
+`Group` declaration at all. They came from `Monoid` via `extends`, and that
+has a consequence worth knowing *before* you need it.
+
+Inside the declaration above you can write `op` and `id` bare, as `invLeft`
+and `invRight` do: earlier fields -- inherited ones included -- are in scope
+in later field types. But when you refer to one of them *from elsewhere*, you
+must name the class it was declared in. So `Monoid.op` and `Monoid.id` exist,
+while `Group.op` and `Group.id` do **not**, and asking for one gets you
+
+  `Unknown constant 'Groups.Group.op'`
+
+Only `Group.inv`, `Group.invLeft` and `Group.invRight` carry the `Group`
+prefix. Dot notation hides the split -- `g.op a b` works for `g : Group α`,
+since Lean looks through the parent -- so the distinction only bites when you
+write the projection out by name, which the torsors lesson does constantly.
+
+A reasonable rule: if the field is something a *monoid* already has, it is
+`Monoid.<field>`.
 ## Example 1: Integers Under Addition
 
 The integers form a group under addition. The operation is `+`,
@@ -283,7 +304,7 @@ inverse of `a`:
   `x = inv(a) * b`                   (use identity)
 
 Let's write a function that solves `a * x = b` in any group. Note
-how the implicit required typeclass instance argumment protects the
+how the implicit required typeclass instance argument protects the
 code from being used when α has not been equipped with the structure
 of a group.
 ```lean
