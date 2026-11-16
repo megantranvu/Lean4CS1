@@ -63,7 +63,7 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 -- a Group is a monoid with an inverse function
 -- groups are symmetry preserving transformations?
 -- simple group: can't be broken down into smaller groups
--- torsor: originless plane where points live, can move between points with vectors
+-- Torsor: originless plane where points live, can move between points with vectors
 -- torsor over a group?
 
 
@@ -95,3 +95,25 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 -- class keyword vs instance keyword: class is like a typeclass, instance is like an implementation of that typeclass?
 -- inferInstance keyword: tells Lean to search database for an instance of a typeclass
 -- read E13 and E14
+
+
+-- 11/11
+-- set vs bag / multiset: set has no duplicates, bag can have duplicates
+-- multiset is a set with multiplicity
+-- so bag is like unordered list
+
+-- Semi-ring is a set with addition and multiplication (but no subtraction)
+-- &Truth startup does software verification
+
+
+-- 11/16
+-- you can fold over graph
+-- graph good for modeling networks
+-- tropical semi-ring used in network calculus
+
+-- things we've learned:
+-- embedding propositional logic
+-- embedding predicate logic
+-- embedding abstract algebra (monoid, group, fold, map)
+
+-- what's next: set theory
