@@ -117,3 +117,10 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 -- embedding abstract algebra (monoid, group, fold, map)
 
 -- what's next: set theory
+
+
+-- 11/18
+-- Tony Hoare's Hoare Logic - rules to prove correctness of programs
+-- Henry Petroski engineering design book: "Design Paradigms"
+-- read over graph fold stuff
+-- type class - defines an abstract interface, you can overload it with diff implementations
