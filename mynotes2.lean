@@ -131,3 +131,7 @@ def myMap {α β : Type} (f : α → β) : List α → List β
 -- can define set as membership predicate
 -- set {1,2,3} defined as predicate of: fun n => (n = 1 ∨ n = 2 ∨ n = 3)
 -- subbing in value 1 gets proposition that (1 = 1 ∨ 1 = 2 ∨ 1 = 3)
+-- cool tactics: simp, decide
+-- tactics are like proof shortcuts, they can be used to prove propositions
+-- look over E17
+-- a binary relation is any subset of the product set (could be empty, strict subset, full relation)
